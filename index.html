@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DrawPad</title>
+  <title>DrawPad — Canvas Drawing App</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -13,7 +13,7 @@
   <header class="header">
     <div class="header-left">
       <div class="logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
           <path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>
         </svg>
@@ -22,69 +22,102 @@
       <span class="canvas-size" id="canvasSize"></span>
     </div>
     <div class="header-actions">
-      <button class="hbtn" id="undoBtn" title="Undo (Ctrl+Z)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+      <button class="hbtn" id="undoBtn" disabled title="Undo (Ctrl+Z)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
         Undo
       </button>
-      <button class="hbtn" id="redoBtn" title="Redo (Ctrl+Y)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"/></svg>
+      <button class="hbtn" id="redoBtn" disabled title="Redo (Ctrl+Y)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"/></svg>
         Redo
       </button>
-      <button class="hbtn danger" id="clearBtn" title="Clear canvas">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+      <div class="sep"></div>
+      <button class="hbtn icon-only" id="gridBtn" title="Toggle Grid (G)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="hbtn icon-only" id="zoomOutBtn" title="Zoom Out (-)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <span class="zoom-label" id="zoomLabel">100%</span>
+      <button class="hbtn icon-only" id="zoomInBtn" title="Zoom In (+)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <button class="hbtn icon-only" id="zoomResetBtn" title="Reset Zoom (0)">1:1</button>
+      <div class="sep"></div>
+      <button class="hbtn" id="clearBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
         Clear
       </button>
-      <button class="hbtn primary" id="downloadBtn" title="Download as PNG">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Save PNG
+      <div class="export-group">
+        <button class="hbtn primary" id="downloadBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Save PNG
+        </button>
+      </div>
+      <button class="hbtn icon-only" id="helpBtn" title="Shortcuts (?)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </button>
     </div>
   </header>
 
   <div class="workspace">
 
-    <!-- Sidebar Toolbar -->
+    <!-- Sidebar -->
     <aside class="toolbar">
 
-      <!-- Tools -->
       <div class="tool-group">
         <p class="group-label">Tools</p>
-        <button class="tool active" id="tool-pen" data-tool="pen" title="Pen (P)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+
+        <button class="tool active" data-tool="pen" title="Pen (P)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
           <span>Pen</span>
         </button>
-        <button class="tool" id="tool-brush" data-tool="brush" title="Brush (B)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 014.03 4.03l-8.06 8.08"/><path d="M7.07 14.94C5.79 17.25 3.5 19 2 19c1.5-1.5 2.5-5 1-6.5s5-3 6.5-1"/></svg>
+
+        <button class="tool" data-tool="brush" title="Brush (B)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 014.03 4.03l-8.06 8.08"/><path d="M7.07 14.94C5.79 17.25 3.5 19 2 19c1.5-1.5 2.5-5 1-6.5s5-3 6.5-1"/></svg>
           <span>Brush</span>
         </button>
-        <button class="tool" id="tool-line" data-tool="line" title="Line (L)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="5"/></svg>
+
+        <button class="tool" data-tool="line" title="Line (L)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="5"/></svg>
           <span>Line</span>
         </button>
-        <button class="tool" id="tool-rect" data-tool="rect" title="Rectangle (R)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+
+        <button class="tool" data-tool="arrow" title="Arrow (A)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="5"/><polyline points="9 5 19 5 19 15"/></svg>
+          <span>Arrow</span>
+        </button>
+
+        <button class="tool" data-tool="rect" title="Rectangle (R)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
           <span>Rect</span>
         </button>
-        <button class="tool" id="tool-circle" data-tool="circle" title="Circle (C)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+
+        <button class="tool" data-tool="circle" title="Circle (C)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
           <span>Circle</span>
         </button>
-        <button class="tool" id="tool-triangle" data-tool="triangle" title="Triangle (T)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 3 22 21 2 21"/></svg>
+
+        <button class="tool" data-tool="triangle" title="Triangle (T)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 3 22 21 2 21"/></svg>
           <span>Tri</span>
         </button>
-        <button class="tool" id="tool-eraser" data-tool="eraser" title="Eraser (E)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 20H7L3 16l10-10 7 7-2.5 2.5"/><line x1="6.5" y1="17.5" x2="13" y2="11"/></svg>
+
+        <button class="tool" data-tool="text" title="Text (X)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span>Text</span>
+        </button>
+
+        <button class="tool" data-tool="eraser" title="Eraser (E)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 20H7L3 16l10-10 7 7-2.5 2.5"/><line x1="6.5" y1="17.5" x2="13" y2="11"/></svg>
           <span>Eraser</span>
         </button>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Fill toggle -->
       <div class="tool-group">
         <p class="group-label">Fill</p>
-        <button class="fill-toggle" id="fillToggle" title="Toggle fill for shapes">
+        <button class="fill-toggle" id="fillToggle">
           <div class="fill-preview" id="fillPreview"></div>
           <span id="fillLabel">Off</span>
         </button>
@@ -92,29 +125,33 @@
 
       <div class="divider"></div>
 
-      <!-- Brush size -->
       <div class="tool-group">
-        <p class="group-label">Size <span class="size-val" id="sizeVal">4px</span></p>
-        <input type="range" id="sizeSlider" min="1" max="60" value="4" class="slider" />
+        <p class="group-label">Size <span class="val" id="sizeVal">4</span></p>
+        <input type="range" id="sizeSlider" min="1" max="80" value="4" class="slider" />
         <div class="size-dots">
-          <span class="dot" style="width:4px;height:4px" data-size="2"></span>
-          <span class="dot" style="width:8px;height:8px" data-size="5"></span>
-          <span class="dot" style="width:14px;height:14px" data-size="12"></span>
-          <span class="dot" style="width:22px;height:22px" data-size="30"></span>
+          <span class="dot" style="width:5px;height:5px"  data-size="2"></span>
+          <span class="dot" style="width:9px;height:9px"  data-size="6"></span>
+          <span class="dot" style="width:15px;height:15px" data-size="14"></span>
+          <span class="dot" style="width:22px;height:22px" data-size="32"></span>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Opacity -->
       <div class="tool-group">
-        <p class="group-label">Opacity <span class="size-val" id="opacityVal">100%</span></p>
+        <p class="group-label">Opacity <span class="val" id="opacityVal">100%</span></p>
         <input type="range" id="opacitySlider" min="5" max="100" value="100" class="slider" />
       </div>
 
       <div class="divider"></div>
 
-      <!-- Color -->
+      <div class="tool-group">
+        <p class="group-label">Font Size <span class="val" id="fontSizeVal">20</span></p>
+        <input type="range" id="fontSizeSlider" min="10" max="120" value="20" class="slider" />
+      </div>
+
+      <div class="divider"></div>
+
       <div class="tool-group">
         <p class="group-label">Color</p>
         <input type="color" id="colorPicker" value="#ffffff" class="color-input" />
@@ -132,18 +169,19 @@
           <button class="swatch" style="background:#6b7280" data-color="#6b7280"></button>
           <button class="swatch" style="background:#111827" data-color="#111827"></button>
         </div>
+        <p class="group-label" style="margin-top:8px">Recent</p>
+        <div class="palette" id="recentColors"></div>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Background -->
       <div class="tool-group">
         <p class="group-label">Background</p>
-        <div class="bg-swatches">
+        <div class="palette">
           <button class="swatch active" style="background:#0f172a;border:1px solid #334155" data-bg="#0f172a"></button>
           <button class="swatch" style="background:#ffffff" data-bg="#ffffff"></button>
           <button class="swatch" style="background:#1e293b" data-bg="#1e293b"></button>
-          <button class="swatch" style="background:#fafaf9" data-bg="#fafaf9"></button>
+          <button class="swatch" style="background:#fafaf9;border:1px solid #d1d5db" data-bg="#fafaf9"></button>
         </div>
       </div>
 
@@ -151,14 +189,60 @@
 
     <!-- Canvas area -->
     <div class="canvas-area" id="canvasArea">
-      <canvas id="canvas"></canvas>
-      <canvas id="tempCanvas"></canvas>
+      <div class="canvas-viewport" id="viewport">
+        <canvas id="gridCanvas"></canvas>
+        <canvas id="canvas"></canvas>
+        <canvas id="tempCanvas"></canvas>
+      </div>
     </div>
 
   </div>
 
-  <!-- Cursor size indicator -->
+  <!-- Text Input Overlay -->
+  <div class="text-overlay" id="textOverlay" style="display:none">
+    <input type="text" id="textInput" placeholder="Type here, Enter to confirm" />
+  </div>
+
+  <!-- Cursor ring -->
   <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Shortcuts Modal -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Keyboard Shortcuts</h2>
+        <button class="modal-close" id="modalClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut-group">
+          <p class="sg-title">Tools</p>
+          <div class="sc-row"><kbd>P</kbd><span>Pen</span></div>
+          <div class="sc-row"><kbd>B</kbd><span>Brush</span></div>
+          <div class="sc-row"><kbd>L</kbd><span>Line</span></div>
+          <div class="sc-row"><kbd>A</kbd><span>Arrow</span></div>
+          <div class="sc-row"><kbd>R</kbd><span>Rectangle</span></div>
+          <div class="sc-row"><kbd>C</kbd><span>Circle</span></div>
+          <div class="sc-row"><kbd>T</kbd><span>Triangle</span></div>
+          <div class="sc-row"><kbd>X</kbd><span>Text</span></div>
+          <div class="sc-row"><kbd>E</kbd><span>Eraser</span></div>
+        </div>
+        <div class="shortcut-group">
+          <p class="sg-title">Actions</p>
+          <div class="sc-row"><kbd>Ctrl Z</kbd><span>Undo</span></div>
+          <div class="sc-row"><kbd>Ctrl Y</kbd><span>Redo</span></div>
+          <div class="sc-row"><kbd>G</kbd><span>Toggle Grid</span></div>
+          <div class="sc-row"><kbd>+</kbd><span>Zoom In</span></div>
+          <div class="sc-row"><kbd>-</kbd><span>Zoom Out</span></div>
+          <div class="sc-row"><kbd>0</kbd><span>Reset Zoom</span></div>
+          <div class="sc-row"><kbd>F</kbd><span>Toggle Fill</span></div>
+          <div class="sc-row"><kbd>Del</kbd><span>Clear Canvas</span></div>
+          <div class="sc-row"><kbd>?</kbd><span>This Help</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
