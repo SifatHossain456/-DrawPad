@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrawPad</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+          <path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>
+        </svg>
+        DrawPad
+      </div>
+      <span class="canvas-size" id="canvasSize"></span>
+    </div>
+    <div class="header-actions">
+      <button class="hbtn" id="undoBtn" title="Undo (Ctrl+Z)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+        Undo
+      </button>
+      <button class="hbtn" id="redoBtn" title="Redo (Ctrl+Y)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"/></svg>
+        Redo
+      </button>
+      <button class="hbtn danger" id="clearBtn" title="Clear canvas">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        Clear
+      </button>
+      <button class="hbtn primary" id="downloadBtn" title="Download as PNG">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Save PNG
+      </button>
+    </div>
+  </header>
+
+  <div class="workspace">
+
+    <!-- Sidebar Toolbar -->
+    <aside class="toolbar">
+
+      <!-- Tools -->
+      <div class="tool-group">
+        <p class="group-label">Tools</p>
+        <button class="tool active" id="tool-pen" data-tool="pen" title="Pen (P)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+          <span>Pen</span>
+        </button>
+        <button class="tool" id="tool-brush" data-tool="brush" title="Brush (B)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 014.03 4.03l-8.06 8.08"/><path d="M7.07 14.94C5.79 17.25 3.5 19 2 19c1.5-1.5 2.5-5 1-6.5s5-3 6.5-1"/></svg>
+          <span>Brush</span>
+        </button>
+        <button class="tool" id="tool-line" data-tool="line" title="Line (L)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="5"/></svg>
+          <span>Line</span>
+        </button>
+        <button class="tool" id="tool-rect" data-tool="rect" title="Rectangle (R)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          <span>Rect</span>
+        </button>
+        <button class="tool" id="tool-circle" data-tool="circle" title="Circle (C)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+          <span>Circle</span>
+        </button>
+        <button class="tool" id="tool-triangle" data-tool="triangle" title="Triangle (T)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 3 22 21 2 21"/></svg>
+          <span>Tri</span>
+        </button>
+        <button class="tool" id="tool-eraser" data-tool="eraser" title="Eraser (E)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 20H7L3 16l10-10 7 7-2.5 2.5"/><line x1="6.5" y1="17.5" x2="13" y2="11"/></svg>
+          <span>Eraser</span>
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Fill toggle -->
+      <div class="tool-group">
+        <p class="group-label">Fill</p>
+        <button class="fill-toggle" id="fillToggle" title="Toggle fill for shapes">
+          <div class="fill-preview" id="fillPreview"></div>
+          <span id="fillLabel">Off</span>
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Brush size -->
+      <div class="tool-group">
+        <p class="group-label">Size <span class="size-val" id="sizeVal">4px</span></p>
+        <input type="range" id="sizeSlider" min="1" max="60" value="4" class="slider" />
+        <div class="size-dots">
+          <span class="dot" style="width:4px;height:4px" data-size="2"></span>
+          <span class="dot" style="width:8px;height:8px" data-size="5"></span>
+          <span class="dot" style="width:14px;height:14px" data-size="12"></span>
+          <span class="dot" style="width:22px;height:22px" data-size="30"></span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Opacity -->
+      <div class="tool-group">
+        <p class="group-label">Opacity <span class="size-val" id="opacityVal">100%</span></p>
+        <input type="range" id="opacitySlider" min="5" max="100" value="100" class="slider" />
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Color -->
+      <div class="tool-group">
+        <p class="group-label">Color</p>
+        <input type="color" id="colorPicker" value="#ffffff" class="color-input" />
+        <div class="palette">
+          <button class="swatch active" style="background:#ffffff" data-color="#ffffff"></button>
+          <button class="swatch" style="background:#f87171" data-color="#f87171"></button>
+          <button class="swatch" style="background:#fb923c" data-color="#fb923c"></button>
+          <button class="swatch" style="background:#fbbf24" data-color="#fbbf24"></button>
+          <button class="swatch" style="background:#a3e635" data-color="#a3e635"></button>
+          <button class="swatch" style="background:#34d399" data-color="#34d399"></button>
+          <button class="swatch" style="background:#22d3ee" data-color="#22d3ee"></button>
+          <button class="swatch" style="background:#60a5fa" data-color="#60a5fa"></button>
+          <button class="swatch" style="background:#a78bfa" data-color="#a78bfa"></button>
+          <button class="swatch" style="background:#f472b6" data-color="#f472b6"></button>
+          <button class="swatch" style="background:#6b7280" data-color="#6b7280"></button>
+          <button class="swatch" style="background:#111827" data-color="#111827"></button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Background -->
+      <div class="tool-group">
+        <p class="group-label">Background</p>
+        <div class="bg-swatches">
+          <button class="swatch active" style="background:#0f172a;border:1px solid #334155" data-bg="#0f172a"></button>
+          <button class="swatch" style="background:#ffffff" data-bg="#ffffff"></button>
+          <button class="swatch" style="background:#1e293b" data-bg="#1e293b"></button>
+          <button class="swatch" style="background:#fafaf9" data-bg="#fafaf9"></button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Canvas area -->
+    <div class="canvas-area" id="canvasArea">
+      <canvas id="canvas"></canvas>
+      <canvas id="tempCanvas"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Cursor size indicator -->
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
